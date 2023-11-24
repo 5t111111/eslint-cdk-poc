@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-eslint-cdk-poc",
+  "name": "eslint-plugin-cdk-poc",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {

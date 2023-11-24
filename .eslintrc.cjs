@@ -1,9 +1,10 @@
 module.exports = {
-  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:cdk-poc/all",
+  ],
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint", "eslint-cdk-poc"],
+  plugins: ["@typescript-eslint", "cdk-poc"],
   root: true,
-  rules: {
-    "eslint-cdk-poc/no-process-node-env": "error",
-  },
 };
