@@ -1,44 +1,45 @@
 import { Rule as noProcessNodeEnvRule } from "eslint";
-import {
-  MemberExpression,
-  Expression,
-  Super,
-  Identifier,
-  PrivateIdentifier,
-} from "estree";
+import { Super, PrivateIdentifier } from "estree";
+import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
+
+const createRule = ESLintUtils.RuleCreator(
+  // TODO: ドキュメント URL はまだ存在しないのでダミー
+  (name) => `https://example.com/rule/${name}`
+);
 
 const isMemberExpression = (
-  object: Expression | Super
-): object is MemberExpression & {
+  object: TSESTree.Expression | Super
+): object is TSESTree.MemberExpression & {
   parent: noProcessNodeEnvRule.Node;
 } => {
   return object.type === "MemberExpression";
 };
 
 const isIdentifier = (
-  expression: Expression | Super | PrivateIdentifier
-): expression is Identifier => {
+  expression: TSESTree.Expression | Super | PrivateIdentifier
+): expression is TSESTree.Identifier => {
   return expression.type === "Identifier";
 };
 
-const rule: noProcessNodeEnvRule.RuleModule = {
+export default createRule({
   meta: {
     type: "problem",
+    schema: [],
     hasSuggestions: true,
     docs: {
       description: "許可のされていないprocess.env.NODE_ENV",
     },
     messages: {
       unexpectedProcessEnvNodeEnv:
-        "process.env.NODE_ENVは許可されていません。myNodeEnv() を利用してください。",
+        "process.env.NODE_ENVは許可されていません。myNodeEnv() を利用してください!!!!!!",
       replaceToNodeEnv: "myNodeEnv() に置き換える。",
     },
   },
-  create(context: noProcessNodeEnvRule.RuleContext) {
+  name: "no-process-node-env",
+  defaultOptions: [],
+  create: (context) => {
     return {
-      MemberExpression(
-        node: MemberExpression & noProcessNodeEnvRule.NodeParentExtension
-      ) {
+      MemberExpression(node: TSESTree.MemberExpression) {
         // typeチェックを行います。typeといってもASTのtypeです。
         const sourceNode = node.object;
 
@@ -93,6 +94,4 @@ const rule: noProcessNodeEnvRule.RuleModule = {
       },
     };
   },
-};
-
-module.exports = rule;
+});
